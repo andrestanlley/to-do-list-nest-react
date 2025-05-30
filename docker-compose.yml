@@ -1,0 +1,31 @@
+services:
+    api:
+        container_name: api
+        build: ./backend
+        ports:
+            - 3000:3000
+        networks:
+            - to-do-network
+
+    frontend:
+        container_name: SPA
+        build: ./frontend
+        ports:
+            - 8080:80
+        networks:
+            - to-do-network
+
+    database:
+        container_name: db
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        networks:
+            - to-do-network
+        environment:
+            - ACCEPT_EULA=Y
+            - SA_PASSWORD=Your_password123
+        ports:
+            - 1433:1433
+
+
+networks:
+  to-do-network:
