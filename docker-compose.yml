@@ -6,6 +6,7 @@ services:
             - 3000:3000
         networks:
             - to-do-network
+        restart: unless-stopped
 
     frontend:
         container_name: SPA
@@ -17,15 +18,11 @@ services:
 
     database:
         container_name: db
-        image: mcr.microsoft.com/mssql/server:2022-latest
+        build: ./db
         networks:
             - to-do-network
-        environment:
-            - ACCEPT_EULA=Y
-            - SA_PASSWORD=Your_password123
         ports:
             - 1433:1433
 
-
 networks:
-  to-do-network:
+    to-do-network:

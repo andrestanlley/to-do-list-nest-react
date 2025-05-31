@@ -1,0 +1,2 @@
+CREATE DATABASE [to_do]
+GO
