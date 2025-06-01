@@ -4,11 +4,11 @@ import {
   ICreateUserUseCaseInput,
   ICreateUserUseCaseOutput,
 } from 'src/modules/users/application/contracts/create-user.contract';
+import { userDomainToApplication } from 'src/modules/users/application/mappers/user.mapper';
 import { AUserRepository } from 'src/modules/users/domain/contracts/user-repository.abstract';
 import { User } from 'src/modules/users/domain/entities/user.entity';
-import { UserSchema } from '../schemas/user.schema';
 import { Repository } from 'typeorm';
-import { userDomainToApplication } from 'src/modules/users/application/mappers/user.mapper';
+import { UserSchema } from '../schemas/user.schema';
 
 @Injectable()
 export default class UserRepositoryImpl implements AUserRepository {

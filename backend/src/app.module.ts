@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from './modules/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import 'dotenv/config';
-import { UserSchema } from './modules/users/infrastructure/database/schemas/user.schema';
 import { BoardsModule } from './modules/boards/boards.module';
 import { TasksModule } from './modules/tasks/tasks.module';
+import { UserSchema } from './modules/users/infrastructure/database/schemas/user.schema';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
