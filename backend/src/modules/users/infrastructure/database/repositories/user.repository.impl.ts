@@ -33,10 +33,6 @@ export default class UserRepositoryImpl implements AUserRepository {
     return this.mapperUser(newUser);
   }
 
-  findById(id: string): Promise<User | null> {
-    throw new Error('Method not implemented.');
-  }
-
   async findByEmail(email: string): Promise<ICreateUserUseCaseOutput | null> {
     const user = await this.repo.findOne({
       where: {
@@ -47,13 +43,5 @@ export default class UserRepositoryImpl implements AUserRepository {
     if (!user) return null;
 
     return this.mapperUser(user);
-  }
-
-  findAll(page: number, limit: number): Promise<User[]> {
-    throw new Error('Method not implemented.');
-  }
-
-  countDocuments(): Promise<number> {
-    throw new Error('Method not implemented.');
   }
 }

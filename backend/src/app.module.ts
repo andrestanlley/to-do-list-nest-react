@@ -1,14 +1,16 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import 'dotenv/config';
 import { UserSchema } from './modules/users/infrastructure/database/schemas/user.schema';
+import { BoardsModule } from './modules/boards/boards.module';
+import { TasksModule } from './modules/tasks/tasks.module';
 
 @Module({
   imports: [
     UsersModule,
+    BoardsModule,
+    TasksModule,
     TypeOrmModule.forRoot({
       type: 'mssql',
       host: process.env.DB_HOST,
@@ -24,7 +26,5 @@ import { UserSchema } from './modules/users/infrastructure/database/schemas/user
       },
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

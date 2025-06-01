@@ -18,8 +18,4 @@ export class Email {
   getEmail(): string {
     return this.value;
   }
-
-  isEqualTo(other: Email): boolean {
-    return this.value === other.getEmail();
-  }
 }
