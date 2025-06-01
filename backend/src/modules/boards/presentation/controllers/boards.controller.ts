@@ -6,10 +6,12 @@ import {
   HttpCode,
   HttpStatus,
   BadRequestException,
+  UseGuards,
 } from '@nestjs/common';
-import { BoardDtoInput } from '../dto/board.dto';
+import { IBoardInput } from '../../application/contracts/board.contract';
 import CreateBoardUseCase from '../../application/use-cases/create-board.usecase';
 import { FindByUserUseCase } from '../../application/use-cases/find-by-user.usecase';
+import { JwtAuthGuard } from 'src/modules/auth/infrastructure/guards/jwt-auth.guard';
 
 @Controller('boards')
 export class BoardsController {
@@ -20,7 +22,8 @@ export class BoardsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createBoardDto: BoardDtoInput) {
+  @UseGuards(JwtAuthGuard)
+  create(@Body() createBoardDto: IBoardInput) {
     try {
       return this.createBoardUseCase.execute(createBoardDto);
     } catch (error) {
@@ -29,6 +32,7 @@ export class BoardsController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   findAll(@Body() userId: string) {
     return this.findByUserUseCase.execute(userId);
   }

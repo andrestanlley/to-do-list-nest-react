@@ -3,14 +3,14 @@ import { ABoardRepository } from '../../domain/contracts/board-repository.abstra
 import CreateBoardUseCase from '../../application/use-cases/create-board.usecase';
 import { randomUUID } from 'crypto';
 import { FindByUserUseCase } from '../../application/use-cases/find-by-user.usecase';
-import { BoardDtoOutput } from '../dto/board.dto';
+import { IBoardOutput } from '../../application/contracts/board.contract';
 import { messages } from 'src/shared/domain/constants/messages';
 import { BoardsController } from './boards.controller';
 
 describe('BoardsController', () => {
   let controller: BoardsController;
 
-  const boards: BoardDtoOutput[] = [];
+  const boards: IBoardOutput[] = [];
 
   beforeEach(async () => {
     class RepoMock {

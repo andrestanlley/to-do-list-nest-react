@@ -7,7 +7,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { CreateUserUseCase } from '../../application/use-cases/create-user.usecase';
-import { UserDtoInput } from '../dto/user.dto';
+import { IUserInput } from '../../application/contracts/user.contract';
 
 @Controller('users')
 export class UsersController {
@@ -15,7 +15,7 @@ export class UsersController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() user: UserDtoInput) {
+  async create(@Body() user: IUserInput) {
     try {
       return await this.createUserUseCase.execute(user);
     } catch (error) {

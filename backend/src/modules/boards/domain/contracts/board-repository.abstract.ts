@@ -1,9 +1,9 @@
 import {
-  BoardDtoInput,
-  BoardDtoOutput,
-} from '../../presentation/dto/board.dto';
+  IBoardInput,
+  IBoardOutput,
+} from '../../application/contracts/board.contract';
 
 export abstract class ABoardRepository {
-  abstract create(user: BoardDtoInput): Promise<BoardDtoOutput>;
-  abstract findByUser(userId: string): Promise<BoardDtoOutput[]>;
+  abstract create(user: IBoardInput): Promise<IBoardOutput>;
+  abstract findByUser(userId: string): Promise<IBoardOutput[]>;
 }

@@ -10,13 +10,15 @@ import {
   HttpStatus,
   BadRequestException,
   Res,
+  UseGuards,
 } from '@nestjs/common';
-import { TaskDtoInput } from '../dto/task.dto';
+import { ITaskInput } from '../../application/contracts/task.contract';
 import { Response } from 'express';
 import { CreateTaskUseCase } from '../../application/use-cases/create-task.usecase';
 import { FindAllTasksUseCase } from '../../application/use-cases/find-all-task.usecase';
 import { UpdateTaskUseCase } from '../../application/use-cases/update-task.usecase';
 import { DeleteTaskUseCase } from '../../application/use-cases/delete-task.usecase';
+import { JwtAuthGuard } from 'src/modules/auth/infrastructure/guards/jwt-auth.guard';
 
 @Controller('tasks')
 export class TasksController {
@@ -28,16 +30,18 @@ export class TasksController {
   ) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() TaskDtoInput: TaskDtoInput) {
+  async create(@Body() ITaskInput: ITaskInput) {
     try {
-      return await this.createTaskUseCase.execute(TaskDtoInput);
+      return await this.createTaskUseCase.execute(ITaskInput);
     } catch (error) {
       throw new BadRequestException(error.message);
     }
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   async findAll(@Body() boardId: string) {
     try {
       const result = await this.findAllTasksUseCase.execute(boardId);
@@ -49,11 +53,13 @@ export class TasksController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateTaskDto: TaskDtoInput) {
+  @UseGuards(JwtAuthGuard)
+  async update(@Param('id') id: string, @Body() updateTaskDto: ITaskInput) {
     return await this.updateTaskUseCase.execute(id, updateTaskDto);
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   async remove(@Param('id') id: string) {
     return await this.deleteTaskUseCase.execute(id);
   }

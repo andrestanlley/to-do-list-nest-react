@@ -1,6 +1,11 @@
-import { UserDtoInput, UserDtoOutput } from '../../presentation/dto/user.dto';
+import {
+  IUserAuth,
+  IUserInput,
+  IUserOutput,
+} from '../../application/contracts/user.contract';
 
 export abstract class AUserRepository {
-  abstract create(user: UserDtoInput): Promise<UserDtoOutput>;
-  abstract findByEmail(email: string): Promise<UserDtoOutput | null>;
+  abstract create(user: IUserInput): Promise<IUserOutput>;
+  abstract findByEmail(email: string): Promise<IUserAuth | null>;
+  abstract findById(userId: string): Promise<IUserAuth | null>
 }

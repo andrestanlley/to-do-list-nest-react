@@ -5,12 +5,12 @@ import { messages } from 'src/shared/domain/constants/messages';
 import { FindUserByEmailUseCase } from '../../application/use-cases/find-user-by-email.usecase';
 import { randomUUID } from 'crypto';
 import { UsersController } from './users.controller';
-import { UserDtoOutput } from '../dto/user.dto';
+import { IUserOutput } from '../../application/contracts/user.contract';
 
 describe('UsersController', () => {
   let controller: UsersController;
 
-  const users: UserDtoOutput[] = [];
+  const users: IUserOutput[] = [];
 
   beforeEach(async () => {
     class RepoMock {

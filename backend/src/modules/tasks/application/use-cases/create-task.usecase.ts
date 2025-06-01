@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { TaskDtoInput } from '../../presentation/dto/task.dto';
+import { ITaskInput } from '../contracts/task.contract';
 import { ATaskRepository } from '../../domain/contracts/task-repository.abstract';
 import { Task } from '../../domain/entities/task.entity';
 
@@ -7,7 +7,7 @@ import { Task } from '../../domain/entities/task.entity';
 export class CreateTaskUseCase {
   constructor(private readonly repo: ATaskRepository) {}
 
-  async execute(task: TaskDtoInput) {
+  async execute(task: ITaskInput) {
     const newTask = Task.create(task).toObject();
     return await this.repo.create(newTask);
   }

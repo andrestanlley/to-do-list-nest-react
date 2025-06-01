@@ -1,6 +1,5 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { UserSchema } from '../../../modules/users/infrastructure/database/schemas/user.schema';
-import 'dotenv/config';
 import { CreateUsers1748780686973 } from './migrations/1748780686973-CreateUsers';
 import { CreateBoards1748781735682 } from './migrations/1748781735682-CreateBoards';
 import { BoardSchema } from '../../../modules/boards/infrastructure/database/schemas/board.schema';

@@ -4,25 +4,25 @@ import { FindAllTasksUseCase } from '../../application/use-cases/find-all-task.u
 import { UpdateTaskUseCase } from '../../application/use-cases/update-task.usecase';
 import { DeleteTaskUseCase } from '../../application/use-cases/delete-task.usecase';
 import { ATaskRepository } from '../../domain/contracts/task-repository.abstract';
-import { TaskDtoOutput } from '../dto/task.dto';
+import { ITaskOutput } from '../../application/contracts/task.contract';
 import { messages } from 'src/shared/domain/constants/messages';
 import { TasksController } from './tasks.controller';
 
 describe('TasksController', () => {
   let controller: TasksController;
 
-  const tasks: TaskDtoOutput[] = [];
+  const tasks: ITaskOutput[] = [];
 
   beforeEach(async () => {
     class RepoMock {
-      create = jest.fn((task: TaskDtoOutput) => {
+      create = jest.fn((task: ITaskOutput) => {
         tasks.push(task);
         return task;
       });
       findAll = jest.fn((boardId: string) =>
         tasks.filter((task) => task.board_id === boardId),
       );
-      update = jest.fn((taskId: string, task: TaskDtoOutput) => {
+      update = jest.fn((taskId: string, task: ITaskOutput) => {
         const idx = tasks.findIndex((task) => task.id === taskId);
         if (idx === -1) return null;
         tasks[idx] = task;

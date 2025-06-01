@@ -1,7 +1,7 @@
 import { User } from 'src/modules/users/domain/entities/user.entity';
-import { UserDtoOutput } from '../../presentation/dto/user.dto';
+import { IUserOutput } from '../contracts/user.contract';
 
-export function userDomainToApplication(user: User): UserDtoOutput {
+export function userDomainToApplication(user: User): IUserOutput {
   const output = user.toObject();
   return {
     id: output.id,

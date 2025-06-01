@@ -6,9 +6,10 @@ import { User } from 'src/modules/users/domain/entities/user.entity';
 import { Repository } from 'typeorm';
 import { UserSchema } from '../schemas/user.schema';
 import {
-  UserDtoInput,
-  UserDtoOutput,
-} from 'src/modules/users/presentation/dto/user.dto';
+  IUserAuth,
+  IUserInput,
+  IUserOutput,
+} from 'src/modules/users/application/contracts/user.contract';
 
 @Injectable()
 export default class UserRepositoryImpl implements AUserRepository {
@@ -26,12 +27,12 @@ export default class UserRepositoryImpl implements AUserRepository {
     return userDomainToApplication(user);
   }
 
-  async create(user: UserDtoInput): Promise<UserDtoOutput> {
+  async create(user: IUserInput): Promise<IUserOutput> {
     const newUser = await this.repo.save(user);
     return this.mapperUser(newUser);
   }
 
-  async findByEmail(email: string): Promise<UserDtoOutput | null> {
+  async findByEmail(email: string): Promise<IUserAuth | null> {
     const user = await this.repo.findOne({
       where: {
         email,
@@ -40,6 +41,18 @@ export default class UserRepositoryImpl implements AUserRepository {
 
     if (!user) return null;
 
-    return this.mapperUser(user);
+    return user;
+  }
+
+  async findById(userId: string): Promise<IUserAuth | null> {
+    const user = await this.repo.findOne({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) return null;
+
+    return user;
   }
 }

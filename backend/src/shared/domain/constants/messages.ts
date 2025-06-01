@@ -6,4 +6,5 @@ export const messages = {
     'Senha deve conter no mínimo 8 caracteres, incluindo letras maiúsculas, letras minúsculas, números e caracteres especiais.',
   INVALID_BOARD_NAME: 'Preencha o nome do quadro corretamente.',
   ALL_FIELDS_REQUIRED: 'Preencha todos os campos.',
+  INVALID_TOKEN: 'Token invalido ou expirado, faça login novamente.',
 };
