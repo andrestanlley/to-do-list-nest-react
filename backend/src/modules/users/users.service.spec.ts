@@ -7,18 +7,23 @@ import UserRepositoryImpl from './infrastructure/database/repositories/user.repo
 import { AUserRepository } from './domain/contracts/user-repository.abstract';
 import { messages } from 'src/shared/domain/constants/messages';
 import { FindUserByEmailUseCase } from './application/use-cases/find-user-by-email.usecase';
+import { randomUUID } from 'crypto';
+import { ICreateUserUseCaseOutput } from './application/contracts/create-user.contract';
 
 describe('UsersService', () => {
   let service: UsersService;
-  let repo: any;
+
+  const users: ICreateUserUseCaseOutput[] = [];
 
   beforeEach(async () => {
-    const repoMock = {
-      findOne: jest.fn(),
-      save: jest.fn(),
-      create: jest.fn((dto) => dto),
-      insert: jest.fn(),
-    };
+    class RepoMock {
+      create = jest.fn((dto) => {
+        const user = { ...dto, id: randomUUID(), createdAt: new Date() };
+        users.push(user);
+        return user;
+      });
+      findByEmail = jest.fn();
+    }
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -27,17 +32,12 @@ describe('UsersService', () => {
         FindUserByEmailUseCase,
         {
           provide: AUserRepository,
-          useClass: UserRepositoryImpl,
-        },
-        {
-          provide: getRepositoryToken(UserSchema),
-          useValue: repoMock,
+          useClass: RepoMock,
         },
       ],
     }).compile();
 
     service = module.get<UsersService>(UsersService);
-    repo = module.get(getRepositoryToken(UserSchema));
   });
 
   it('should be defined', () => {
@@ -45,9 +45,6 @@ describe('UsersService', () => {
   });
 
   it('should register a user successfully', async () => {
-    repo.findOne.mockResolvedValue(null);
-    repo.save.mockImplementation((user) => Promise.resolve({ id: 1, ...user }));
-
     const userDto = {
       name: 'John Doe',
       email: 'john@example.com',
@@ -61,9 +58,6 @@ describe('UsersService', () => {
   });
 
   it('should fail on register because an invalid email', async () => {
-    repo.findOne.mockResolvedValue(null);
-    repo.save.mockImplementation((user) => Promise.resolve({ id: 1, ...user }));
-
     const userDto = {
       name: 'John Doe',
       email: 'joao',
@@ -76,9 +70,6 @@ describe('UsersService', () => {
   });
 
   it('should fail on register because an invalid name', async () => {
-    repo.findOne.mockResolvedValue(null);
-    repo.save.mockImplementation((user) => Promise.resolve({ id: 1, ...user }));
-
     const userDto = {
       name: '',
       email: 'john@example.com',
@@ -91,9 +82,6 @@ describe('UsersService', () => {
   });
 
   it('should fail on register because invalid password', async () => {
-    repo.findOne.mockResolvedValue(null);
-    repo.save.mockImplementation((user) => Promise.resolve({ id: 1, ...user }));
-
     const userDto = {
       name: 'John Doe',
       email: 'john@example.com',

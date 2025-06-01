@@ -2,6 +2,7 @@ import { randomUUID } from 'crypto';
 import { Email } from '../../../../shared/domain/value-objects/email.vo';
 import { messages } from 'src/shared/domain/constants/messages';
 import { Password } from 'src/shared/domain/value-objects/password.vo';
+import { Board } from 'src/modules/boards/domain/entities/board.entity';
 
 export class User {
   private constructor(
@@ -11,6 +12,7 @@ export class User {
     private password: string,
     private createdAt: Date,
     private updatedAt: Date,
+    private boards?: Board[],
   ) {}
 
   static create(input: {
@@ -34,6 +36,7 @@ export class User {
       hashPass.getValue(),
       now,
       now,
+      [],
     );
   }
 
@@ -45,6 +48,7 @@ export class User {
       password: this.password,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
+      boards: this.boards,
     };
   }
 

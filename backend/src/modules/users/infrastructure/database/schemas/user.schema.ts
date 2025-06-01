@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { BoardSchema } from '../../../../boards/infrastructure/database/schemas/board.schema';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Injectable()
@@ -18,6 +20,9 @@ export class UserSchema {
 
   @Column({ type: 'varchar', length: 255, unique: true })
   email: string;
+
+  @OneToMany(() => BoardSchema, (board) => board.user)
+  boards: BoardSchema[];
 
   @Column({ type: 'varchar', length: 255 })
   password: string;
