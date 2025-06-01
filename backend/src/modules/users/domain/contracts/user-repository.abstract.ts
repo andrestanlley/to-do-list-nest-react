@@ -1,11 +1,6 @@
-import {
-  ICreateUserUseCaseInput,
-  ICreateUserUseCaseOutput,
-} from '../../application/contracts/create-user.contract';
+import { UserDtoInput, UserDtoOutput } from '../../presentation/dto/user.dto';
 
 export abstract class AUserRepository {
-  abstract create(
-    user: ICreateUserUseCaseInput,
-  ): Promise<ICreateUserUseCaseOutput>;
-  abstract findByEmail(email: string): Promise<ICreateUserUseCaseOutput | null>;
+  abstract create(user: UserDtoInput): Promise<UserDtoOutput>;
+  abstract findByEmail(email: string): Promise<UserDtoOutput | null>;
 }

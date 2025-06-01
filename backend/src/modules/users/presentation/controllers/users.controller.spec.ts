@@ -1,19 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UsersService } from './users.service';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { UserSchema } from './infrastructure/database/schemas/user.schema';
-import { CreateUserUseCase } from './application/use-cases/create-user.usecase';
-import UserRepositoryImpl from './infrastructure/database/repositories/user.repository.impl';
-import { AUserRepository } from './domain/contracts/user-repository.abstract';
+import { CreateUserUseCase } from '../../application/use-cases/create-user.usecase';
+import { AUserRepository } from '../../domain/contracts/user-repository.abstract';
 import { messages } from 'src/shared/domain/constants/messages';
-import { FindUserByEmailUseCase } from './application/use-cases/find-user-by-email.usecase';
+import { FindUserByEmailUseCase } from '../../application/use-cases/find-user-by-email.usecase';
 import { randomUUID } from 'crypto';
-import { ICreateUserUseCaseOutput } from './application/contracts/create-user.contract';
+import { UsersController } from './users.controller';
+import { UserDtoOutput } from '../dto/user.dto';
 
-describe('UsersService', () => {
-  let service: UsersService;
+describe('UsersController', () => {
+  let controller: UsersController;
 
-  const users: ICreateUserUseCaseOutput[] = [];
+  const users: UserDtoOutput[] = [];
 
   beforeEach(async () => {
     class RepoMock {
@@ -26,8 +23,8 @@ describe('UsersService', () => {
     }
 
     const module: TestingModule = await Test.createTestingModule({
+      controllers: [UsersController],
       providers: [
-        UsersService,
         CreateUserUseCase,
         FindUserByEmailUseCase,
         {
@@ -37,11 +34,11 @@ describe('UsersService', () => {
       ],
     }).compile();
 
-    service = module.get<UsersService>(UsersService);
+    controller = module.get<UsersController>(UsersController);
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(controller).toBeDefined();
   });
 
   it('should register a user successfully', async () => {
@@ -51,7 +48,7 @@ describe('UsersService', () => {
       password: 'Password@123',
     };
 
-    const result = await service.create(userDto);
+    const result = await controller.create(userDto);
     expect(result.id).toBeTruthy();
     expect(result.name).toEqual(userDto.name);
     expect(result.email).toEqual(userDto.email);
@@ -64,7 +61,7 @@ describe('UsersService', () => {
       password: 'Password@123',
     };
 
-    await expect(service.create(userDto)).rejects.toThrow(
+    await expect(controller.create(userDto)).rejects.toThrow(
       messages.INVALID_EMAIL,
     );
   });
@@ -76,7 +73,7 @@ describe('UsersService', () => {
       password: 'Password@123',
     };
 
-    await expect(service.create(userDto)).rejects.toThrow(
+    await expect(controller.create(userDto)).rejects.toThrow(
       messages.INVALID_NAME,
     );
   });
@@ -88,7 +85,7 @@ describe('UsersService', () => {
       password: 'pass',
     };
 
-    await expect(service.create(userDto)).rejects.toThrow(
+    await expect(controller.create(userDto)).rejects.toThrow(
       messages.INVALID_PASS,
     );
   });

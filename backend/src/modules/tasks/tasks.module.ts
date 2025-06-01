@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TasksService } from './tasks.service';
-import { TasksController } from './tasks.controller';
+import { TasksController } from './presentation/controllers/tasks.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TaskSchema } from './infrastructure/database/schemas/task.schema';
 import { CreateTaskUseCase } from './application/use-cases/create-task.usecase';
@@ -14,7 +13,6 @@ import { TaskRepositoryImpl } from './infrastructure/database/schemas/repositori
   imports: [TypeOrmModule.forFeature([TaskSchema])],
   controllers: [TasksController],
   providers: [
-    TasksService,
     CreateTaskUseCase,
     FindAllTasksUseCase,
     UpdateTaskUseCase,

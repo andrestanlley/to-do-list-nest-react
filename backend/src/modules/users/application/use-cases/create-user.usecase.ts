@@ -1,14 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { AUserRepository } from '../../domain/contracts/user-repository.abstract';
-import { CreateUserDto } from '../../dto/create-user.dto';
+import { UserDtoInput } from '../../presentation/dto/user.dto';
 import { User } from '../../domain/entities/user.entity';
+import { FindUserByEmailUseCase } from './find-user-by-email.usecase';
+import { messages } from 'src/shared/domain/constants/messages';
 
 @Injectable()
 export class CreateUserUseCase {
-  constructor(private readonly repo: AUserRepository) {}
+  constructor(
+    private readonly findUserByEmailUseCase: FindUserByEmailUseCase,
+    private readonly repo: AUserRepository,
+  ) {}
 
-  async execute(input: CreateUserDto) {
+  async execute(input: UserDtoInput) {
     const user = User.create(input).toObject();
+    const hasUser = await this.findUserByEmailUseCase.execute(input.email);
+    if (hasUser) throw new Error(messages.IN_USE_EMAIL);
     return await this.repo.create(user);
   }
 }

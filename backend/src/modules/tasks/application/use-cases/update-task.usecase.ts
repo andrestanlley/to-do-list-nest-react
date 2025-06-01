@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ATaskRepository } from '../../domain/contracts/task-repository.abstract';
-import { TaskDtoInput } from '../../dto/create-task.dto';
+import { TaskDtoInput } from '../../presentation/dto/task.dto';
 
 @Injectable()
 export class UpdateTaskUseCase {

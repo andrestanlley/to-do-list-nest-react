@@ -1,19 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BoardsService } from './boards.service';
-import { ABoardRepository } from './domain/contracts/board-repository.abstract';
-import CreateBoardUseCase from './application/use-cases/create-board.usecase';
-import { BoardRepositoryImpl } from './infrastructure/database/repositories/board.repository.impl';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { BoardSchema } from './infrastructure/database/schemas/board.schema';
+import { ABoardRepository } from '../../domain/contracts/board-repository.abstract';
+import CreateBoardUseCase from '../../application/use-cases/create-board.usecase';
 import { randomUUID } from 'crypto';
-import { FindByUserUseCase } from './application/use-cases/find-by-user.usecase';
-import { CreateBoardDtoOutput } from './dto/create-board.dto';
+import { FindByUserUseCase } from '../../application/use-cases/find-by-user.usecase';
+import { BoardDtoOutput } from '../dto/board.dto';
 import { messages } from 'src/shared/domain/constants/messages';
+import { BoardsController } from './boards.controller';
 
-describe('BoardsService', () => {
-  let service: BoardsService;
+describe('BoardsController', () => {
+  let controller: BoardsController;
 
-  const boards: CreateBoardDtoOutput[] = [];
+  const boards: BoardDtoOutput[] = [];
 
   beforeEach(async () => {
     class RepoMock {
@@ -29,19 +26,19 @@ describe('BoardsService', () => {
     }
 
     const module: TestingModule = await Test.createTestingModule({
+      controllers: [BoardsController],
       providers: [
-        BoardsService,
         CreateBoardUseCase,
         FindByUserUseCase,
         { provide: ABoardRepository, useClass: RepoMock },
       ],
     }).compile();
 
-    service = module.get<BoardsService>(BoardsService);
+    controller = module.get<BoardsController>(BoardsController);
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(controller).toBeDefined();
   });
 
   it('should register a board successfully', async () => {
@@ -50,7 +47,7 @@ describe('BoardsService', () => {
       user_id: randomUUID(),
     };
 
-    const result = await service.create(boardDTO);
+    const result = await controller.create(boardDTO);
     expect(result.id).toBeTruthy();
     expect(result.name).toEqual(boardDTO.name);
     expect(result.user_id).toEqual(boardDTO.user_id);
@@ -62,7 +59,7 @@ describe('BoardsService', () => {
       user_id: randomUUID(),
     };
 
-    await expect(service.create(boardDTO)).rejects.toThrow(
+    await expect(controller.create(boardDTO)).rejects.toThrow(
       messages.INVALID_BOARD_NAME,
     );
   });
@@ -73,8 +70,8 @@ describe('BoardsService', () => {
       user_id: randomUUID(),
     };
 
-    await service.create(boardDTO);
-    const result = await service.findAll(boardDTO.user_id);
+    await controller.create(boardDTO);
+    const result = await controller.findAll(boardDTO.user_id);
     expect(result).toHaveLength(1);
     expect(result[0].name).toEqual(boardDTO.name);
   });

@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TasksService } from './tasks.service';
-import { CreateTaskUseCase } from './application/use-cases/create-task.usecase';
-import { FindAllTasksUseCase } from './application/use-cases/find-all-task.usecase';
-import { UpdateTaskUseCase } from './application/use-cases/update-task.usecase';
-import { DeleteTaskUseCase } from './application/use-cases/delete-task.usecase';
-import { ATaskRepository } from './domain/contracts/task-repository.abstract';
-import { TaskDtoOutput } from './dto/create-task.dto';
+import { CreateTaskUseCase } from '../../application/use-cases/create-task.usecase';
+import { FindAllTasksUseCase } from '../../application/use-cases/find-all-task.usecase';
+import { UpdateTaskUseCase } from '../../application/use-cases/update-task.usecase';
+import { DeleteTaskUseCase } from '../../application/use-cases/delete-task.usecase';
+import { ATaskRepository } from '../../domain/contracts/task-repository.abstract';
+import { TaskDtoOutput } from '../dto/task.dto';
 import { messages } from 'src/shared/domain/constants/messages';
+import { TasksController } from './tasks.controller';
 
-describe('TasksService', () => {
-  let service: TasksService;
+describe('TasksController', () => {
+  let controller: TasksController;
 
   const tasks: TaskDtoOutput[] = [];
 
@@ -39,8 +39,8 @@ describe('TasksService', () => {
     }
 
     const module: TestingModule = await Test.createTestingModule({
+      controllers: [TasksController],
       providers: [
-        TasksService,
         CreateTaskUseCase,
         FindAllTasksUseCase,
         UpdateTaskUseCase,
@@ -49,11 +49,11 @@ describe('TasksService', () => {
       ],
     }).compile();
 
-    service = module.get<TasksService>(TasksService);
+    controller = module.get<TasksController>(TasksController);
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(controller).toBeDefined();
   });
 
   it('Should create a new task', async () => {
@@ -63,7 +63,7 @@ describe('TasksService', () => {
       board_id: '1',
     };
 
-    const result = await service.create(taskDto);
+    const result = await controller.create(taskDto);
     expect(result.id).toBeTruthy();
     expect(result.title).toEqual(taskDto.title);
     expect(result.description).toEqual(taskDto.description);
@@ -77,7 +77,7 @@ describe('TasksService', () => {
       board_id: '1',
     };
 
-    await expect(service.create(taskDto)).rejects.toThrow(
+    await expect(controller.create(taskDto)).rejects.toThrow(
       messages.ALL_FIELDS_REQUIRED,
     );
   });
@@ -89,7 +89,7 @@ describe('TasksService', () => {
       board_id: '1',
     };
 
-    await expect(service.create(taskDto)).rejects.toThrow(
+    await expect(controller.create(taskDto)).rejects.toThrow(
       messages.ALL_FIELDS_REQUIRED,
     );
   });
@@ -101,8 +101,8 @@ describe('TasksService', () => {
       board_id: '1',
     };
 
-    const result = await service.create(taskDto);
-    const update = await service.update(result.id, {
+    const result = await controller.create(taskDto);
+    const update = await controller.update(result.id, {
       ...result,
       title: 'Colher morangos a tarde',
     });
@@ -115,7 +115,7 @@ describe('TasksService', () => {
   it('Should find all tasks of the board', async () => {
     const boardId = '1';
 
-    const result = await service.findAll(boardId);
+    const result = await controller.findAll(boardId);
     expect(result.length).toBeTruthy();
   });
 
@@ -126,10 +126,10 @@ describe('TasksService', () => {
       board_id: '1',
     };
 
-    const task = await service.create(taskDto);
-    const totalTasks = (await service.findAll(taskDto.board_id)).length;
-    await service.remove(task.id);
-    const newTotalTasks = (await service.findAll(taskDto.board_id)).length;
+    const task = await controller.create(taskDto);
+    const totalTasks = (await controller.findAll(taskDto.board_id)).length;
+    await controller.remove(task.id);
+    const newTotalTasks = (await controller.findAll(taskDto.board_id)).length;
     expect(newTotalTasks).toBe(totalTasks - 1);
     expect(tasks).not.toContain(task);
     const taskFound = tasks.find((t) => t.id === task.id);

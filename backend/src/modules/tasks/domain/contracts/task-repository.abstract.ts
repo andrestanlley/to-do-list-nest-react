@@ -1,4 +1,4 @@
-import { TaskDtoInput, TaskDtoOutput } from '../../dto/create-task.dto';
+import { TaskDtoInput, TaskDtoOutput } from '../../presentation/dto/task.dto';
 
 export abstract class ATaskRepository {
   abstract create(task: TaskDtoInput): Promise<TaskDtoOutput>;

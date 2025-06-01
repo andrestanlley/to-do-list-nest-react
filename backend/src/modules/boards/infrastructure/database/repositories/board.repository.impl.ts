@@ -4,9 +4,9 @@ import { ABoardRepository } from 'src/modules/boards/domain/contracts/board-repo
 import { BoardSchema } from '../schemas/board.schema';
 import { Repository } from 'typeorm';
 import {
-  CreateBoardDto,
-  CreateBoardDtoOutput,
-} from 'src/modules/boards/dto/create-board.dto';
+  BoardDtoInput,
+  BoardDtoOutput,
+} from 'src/modules/boards/presentation/dto/board.dto';
 import { Board } from 'src/modules/boards/domain/entities/board.entity';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class BoardRepositoryImpl implements ABoardRepository {
     private readonly repo: Repository<BoardSchema>,
   ) {}
 
-  private toEntity(board: BoardSchema): CreateBoardDtoOutput {
+  private toEntity(board: BoardSchema): BoardDtoOutput {
     const { name, createdAt, user_id } = board;
     return Board.clone(board.id, {
       name,
@@ -25,19 +25,19 @@ export class BoardRepositoryImpl implements ABoardRepository {
     }).toObject();
   }
 
-  async create(board: CreateBoardDto): Promise<CreateBoardDtoOutput> {
+  async create(board: BoardDtoInput): Promise<BoardDtoOutput> {
     const newBoard = await this.repo.save(board);
     return this.toEntity(newBoard);
   }
 
-  async findByUser(userId: string): Promise<CreateBoardDtoOutput[]> {
+  async findByUser(userId: string): Promise<BoardDtoOutput[]> {
     const boards = await this.repo.find({
       where: {
-        user_id: userId
-      }
-    })
-    if(!boards || !boards.length) return []
+        user_id: userId,
+      },
+    });
+    if (!boards || !boards.length) return [];
 
-    return boards.map(this.toEntity)
+    return boards.map(this.toEntity);
   }
 }

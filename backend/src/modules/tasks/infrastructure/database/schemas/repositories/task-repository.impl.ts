@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ATaskRepository } from 'src/modules/tasks/domain/contracts/task-repository.abstract';
-import { TaskDtoInput, TaskDtoOutput } from 'src/modules/tasks/dto/create-task.dto';
+import {
+  TaskDtoInput,
+  TaskDtoOutput,
+} from 'src/modules/tasks/presentation/dto/task.dto';
 import { TaskSchema } from '../task.schema';
 import { Repository } from 'typeorm';
 
