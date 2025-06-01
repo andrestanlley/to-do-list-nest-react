@@ -25,4 +25,6 @@ COPY --from=builder /app/dist ./dist
 
 COPY --from=builder /app/node_modules ./node_modules
 
+RUN npm run migration:run
+
 CMD ["node", "dist/main.js"]
