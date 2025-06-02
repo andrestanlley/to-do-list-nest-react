@@ -33,7 +33,7 @@ export class BoardRepositoryImpl implements ABoardRepository {
   async findByUser(userId: string): Promise<IBoardOutput[]> {
     const boards = await this.repo.find({
       where: {
-        user_id: userId,
+        user: { id: userId },
       },
     });
     if (!boards || !boards.length) return [];

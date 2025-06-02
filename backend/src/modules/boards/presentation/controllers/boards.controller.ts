@@ -7,6 +7,7 @@ import {
   HttpStatus,
   BadRequestException,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { IBoardInput } from '../../application/contracts/board.contract';
 import CreateBoardUseCase from '../../application/use-cases/create-board.usecase';
@@ -33,7 +34,8 @@ export class BoardsController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  findAll(@Body() userId: string) {
+  findAll(@Request() req) {
+    const userId = req.user.sub;
     return this.findByUserUseCase.execute(userId);
   }
 }
