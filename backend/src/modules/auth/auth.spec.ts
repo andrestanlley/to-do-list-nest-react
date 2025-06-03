@@ -1,16 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthController } from './auth.controller';
+import { AuthController } from './presentation/controllers/auth.controller';
 import { JwtService } from '@nestjs/jwt';
-import { SignInUseCase } from '../../application/use-cases/sign-in.usecase';
+import { SignInUseCase } from './application/use-cases/sign-in.usecase';
 import { AUserRepository } from 'src/modules/users/domain/contracts/user-repository.abstract';
 import { randomUUID } from 'crypto';
 import { User } from 'src/modules/users/domain/entities/user.entity';
 import {
   ISignInUseCaseInput,
   ISignInUseCaseOutput,
-} from '../../application/contracts/sign-in.contract';
+} from './application/contracts/sign-in.contract';
 
-describe('AuthController', () => {
+describe('Auth', () => {
   let controller: AuthController;
   let signInUseCase: SignInUseCase;
 

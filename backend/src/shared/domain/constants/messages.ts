@@ -7,4 +7,5 @@ export const messages = {
   INVALID_BOARD_NAME: 'Preencha o nome do quadro corretamente.',
   ALL_FIELDS_REQUIRED: 'Preencha todos os campos.',
   INVALID_TOKEN: 'Token invalido ou expirado, faça login novamente.',
+  NO_PERMISSION: 'Você não tem permissão para fazer isso.',
 };

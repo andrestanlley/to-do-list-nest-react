@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateUserUseCase } from '../../application/use-cases/create-user.usecase';
-import { AUserRepository } from '../../domain/contracts/user-repository.abstract';
+import { CreateUserUseCase } from './application/use-cases/create-user.usecase';
+import { AUserRepository } from './domain/contracts/user-repository.abstract';
 import { messages } from 'src/shared/domain/constants/messages';
-import { FindUserByEmailUseCase } from '../../application/use-cases/find-user-by-email.usecase';
-import { UsersController } from './users.controller';
-import { IUserOutput } from '../../application/contracts/user.contract';
+import { FindUserByEmailUseCase } from './application/use-cases/find-user-by-email.usecase';
+import { UsersController } from './presentation/controllers/users.controller';
+import { IUserOutput } from './application/contracts/user.contract';
 
-describe('UsersController', () => {
+describe('Users', () => {
   let controller: UsersController;
 
   const users: IUserOutput[] = [];

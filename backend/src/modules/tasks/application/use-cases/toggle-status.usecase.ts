@@ -1,19 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { ITaskInput } from '../contracts/task.contract';
+import { ITaskOutput } from '../contracts/task.contract';
 import { ATaskRepository } from '../../domain/contracts/task-repository.abstract';
 import { Task } from '../../domain/entities/task.entity';
 import { VerifyUserPermissionUseCase } from './verify-user-permission';
 
 @Injectable()
-export class CreateTaskUseCase {
+export class ToggleTaskStatusUseCase {
   constructor(
     private readonly repo: ATaskRepository,
     private readonly verifyUserPermissionUseCase: VerifyUserPermissionUseCase,
   ) {}
 
-  async execute(userId: string, task: ITaskInput) {
-    const newTask = new Task(task);
-    await this.verifyUserPermissionUseCase.execute(userId, newTask.board.id);
-    return await this.repo.create(newTask);
+  async execute(userId, task: ITaskOutput) {
+    await this.verifyUserPermissionUseCase.execute(userId, task.board.id);
+    const updateTask = new Task(task);
+    updateTask.changeStatus();
+    return await this.repo.update(updateTask.id, updateTask);
   }
 }

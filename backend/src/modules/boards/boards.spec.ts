@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ABoardRepository } from '../../domain/contracts/board-repository.abstract';
-import CreateBoardUseCase from '../../application/use-cases/create-board.usecase';
+import { ABoardRepository } from './domain/contracts/board-repository.abstract';
+import CreateBoardUseCase from './application/use-cases/create-board.usecase';
 import { randomUUID } from 'crypto';
-import { FindByUserUseCase } from '../../application/use-cases/find-by-user.usecase';
-import { IBoardOutput } from '../../application/contracts/board.contract';
+import { FindByUserUseCase } from './application/use-cases/find-by-user.usecase';
+import { IBoardOutput } from './application/contracts/board.contract';
 import { messages } from 'src/shared/domain/constants/messages';
-import { BoardsController } from './boards.controller';
+import { BoardsController } from './presentation/controllers/boards.controller';
 
-describe('BoardsController', () => {
+describe('Boards', () => {
   let controller: BoardsController;
   let findByUserUseCase: FindByUserUseCase;
   let createBoardUseCase: CreateBoardUseCase;

@@ -86,6 +86,10 @@ export class Task {
     return this._updatedAt;
   }
 
+  get finished() {
+    return this._finished;
+  }
+
   set createdAt(date: Date) {
     this._createdAt = date;
   }

@@ -18,7 +18,17 @@ export class TaskRepositoryImpl implements ATaskRepository {
 
   async create(task: ITaskInput): Promise<ITaskOutput> {
     const newTask = await this.repo.save(task);
-    return taskDomainToApplication(newTask);
+    const result = await this.findById(newTask.id);
+    return taskDomainToApplication(result!);
+  }
+
+  private async findById(taskId: string) {
+    return await this.repo.findOne({
+      where: {
+        id: taskId,
+      },
+      relations: ['board'],
+    });
   }
 
   async findAll(boardId: string): Promise<ITaskOutput[]> {
@@ -26,6 +36,7 @@ export class TaskRepositoryImpl implements ATaskRepository {
       where: {
         board: { id: boardId },
       },
+      relations: ['board'],
     });
 
     if (!tasks || !tasks.length) return [];
@@ -39,6 +50,7 @@ export class TaskRepositoryImpl implements ATaskRepository {
       where: {
         id: taskId,
       },
+      relations: ['board'],
     });
 
     if (!result) return null;
