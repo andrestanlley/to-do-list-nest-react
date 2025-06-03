@@ -5,8 +5,9 @@ import {
   ITaskInput,
   ITaskOutput,
 } from 'src/modules/tasks/application/contracts/task.contract';
-import { TaskSchema } from '../task.schema';
+import { TaskSchema } from '../schemas/task.schema';
 import { Repository } from 'typeorm';
+import { taskDomainToApplication } from 'src/modules/tasks/application/mappers/task.mapper.ts';
 
 @Injectable()
 export class TaskRepositoryImpl implements ATaskRepository {
@@ -16,19 +17,24 @@ export class TaskRepositoryImpl implements ATaskRepository {
   ) {}
 
   async create(task: ITaskInput): Promise<ITaskOutput> {
-    return await this.repo.save(task);
+    const newTask = await this.repo.save(task);
+    return taskDomainToApplication(newTask);
   }
 
   async findAll(boardId: string): Promise<ITaskOutput[]> {
-    return await this.repo.find({
+    const tasks = await this.repo.find({
       where: {
-        board_id: boardId,
+        board: { id: boardId },
       },
     });
+
+    if (!tasks || !tasks.length) return [];
+
+    return tasks.map(taskDomainToApplication);
   }
 
-  async update(taskId: string, task: ITaskInput): Promise<ITaskOutput | null> {
-    await this.repo.update(taskId, task);
+  async update(taskId: string, task: ITaskOutput): Promise<ITaskOutput | null> {
+    await this.repo.update(taskId, taskDomainToApplication(task));
     const result = await this.repo.findOne({
       where: {
         id: taskId,
@@ -37,7 +43,7 @@ export class TaskRepositoryImpl implements ATaskRepository {
 
     if (!result) return null;
 
-    return result;
+    return taskDomainToApplication(result);
   }
 
   async delete(taskId: string): Promise<void> {

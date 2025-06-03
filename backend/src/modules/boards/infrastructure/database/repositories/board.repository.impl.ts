@@ -7,7 +7,7 @@ import {
   IBoardInput,
   IBoardOutput,
 } from 'src/modules/boards/application/contracts/board.contract';
-import { Board } from 'src/modules/boards/domain/entities/board.entity';
+import { boardDomainToApplication } from 'src/modules/boards/application/mappers/board.mapper';
 
 @Injectable()
 export class BoardRepositoryImpl implements ABoardRepository {
@@ -16,18 +16,9 @@ export class BoardRepositoryImpl implements ABoardRepository {
     private readonly repo: Repository<BoardSchema>,
   ) {}
 
-  private toEntity(board: BoardSchema): IBoardOutput {
-    const { name, createdAt, user_id } = board;
-    return Board.clone(board.id, {
-      name,
-      createdAt,
-      user_id: user_id,
-    }).toObject();
-  }
-
   async create(board: IBoardInput): Promise<IBoardOutput> {
     const newBoard = await this.repo.save(board);
-    return this.toEntity(newBoard);
+    return boardDomainToApplication(newBoard);
   }
 
   async findByUser(userId: string): Promise<IBoardOutput[]> {
@@ -35,9 +26,10 @@ export class BoardRepositoryImpl implements ABoardRepository {
       where: {
         user: { id: userId },
       },
+      relations: ['user'],
     });
     if (!boards || !boards.length) return [];
 
-    return boards.map(this.toEntity);
+    return boards.map(boardDomainToApplication);
   }
 }

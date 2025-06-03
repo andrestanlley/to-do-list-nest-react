@@ -7,7 +7,7 @@ import { FindAllTasksUseCase } from './application/use-cases/find-all-task.useca
 import { UpdateTaskUseCase } from './application/use-cases/update-task.usecase';
 import { DeleteTaskUseCase } from './application/use-cases/delete-task.usecase';
 import { ATaskRepository } from './domain/contracts/task-repository.abstract';
-import { TaskRepositoryImpl } from './infrastructure/database/schemas/repositories/task-repository.impl';
+import { TaskRepositoryImpl } from './infrastructure/database/repositories/task-repository.impl';
 
 @Module({
   imports: [TypeOrmModule.forFeature([TaskSchema])],

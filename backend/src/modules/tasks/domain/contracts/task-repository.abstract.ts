@@ -8,7 +8,7 @@ export abstract class ATaskRepository {
   abstract findAll(boardId: string): Promise<ITaskOutput[]>;
   abstract update(
     taskId: string,
-    task: ITaskInput,
+    task: ITaskOutput,
   ): Promise<ITaskOutput | null>;
   abstract delete(taskId: string): Promise<void>;
 }

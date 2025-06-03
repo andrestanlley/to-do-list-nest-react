@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { AUserRepository } from '../../domain/contracts/user-repository.abstract';
 import { IUserInput } from '../contracts/user.contract';
 import { User } from '../../domain/entities/user.entity';
@@ -13,9 +13,9 @@ export class CreateUserUseCase {
   ) {}
 
   async execute(input: IUserInput) {
-    const user = User.create(input).toObject();
+    const user = new User(input);
     const hasUser = await this.findUserByEmailUseCase.execute(input.email);
-    if (hasUser) throw new Error(messages.IN_USE_EMAIL);
+    if (hasUser) throw new BadRequestException(messages.IN_USE_EMAIL);
     return await this.repo.create(user);
   }
 }

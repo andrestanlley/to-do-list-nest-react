@@ -10,7 +10,7 @@ import {
   PrimaryGeneratedColumn,
   RelationId,
 } from 'typeorm';
-import { TaskSchema } from 'src/modules/tasks/infrastructure/database/schemas/task.schema';
+import { TaskSchema } from '../../../../tasks/infrastructure/database/schemas/task.schema';
 
 @Injectable()
 @Entity('boards')

@@ -16,7 +16,7 @@ export class SignInUseCase {
     private readonly jwtService: JwtService,
     private readonly userRepository: AUserRepository,
   ) {}
-  
+
   async execute(signIn: ISignInUseCaseInput): Promise<ISignInUseCaseOutput> {
     const user = await this.userRepository.findByEmail(signIn.email);
     if (!user) throw new UnauthorizedException();
@@ -32,7 +32,7 @@ export class SignInUseCase {
 
     const accessToken = this.jwtService.sign(jwtPayload, {
       secret: process.env.JWT_SECRET,
-      expiresIn: '1h',
+      expiresIn: '4h',
     });
 
     const output = new AuthenticatedUser(

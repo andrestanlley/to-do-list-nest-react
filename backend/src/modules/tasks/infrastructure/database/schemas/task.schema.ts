@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { BoardSchema } from 'src/modules/boards/infrastructure/database/schemas/board.schema';
+import { BoardSchema } from '../../../../boards/infrastructure/database/schemas/board.schema';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  RelationId,
 } from 'typeorm';
 
 @Injectable()
@@ -24,13 +23,16 @@ export class TaskSchema {
   @Column({ type: 'date', name: 'created_at' })
   createdAt: Date;
 
+  @Column({ type: 'date', name: 'limitDate', nullable: true })
+  limitDate: Date;
+
+  @Column({ type: 'tinyint', nullable: true })
+  finished: boolean;
+
   @Column({ type: 'date', name: 'updated_at' })
   updatedAt: Date;
 
   @ManyToOne(() => BoardSchema, (board) => board.tasks, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'board_id' })
   board: BoardSchema;
-
-  @RelationId((task: TaskSchema) => task.board)
-  board_id: string;
 }

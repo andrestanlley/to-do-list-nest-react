@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common';
 import { messages } from '../constants/messages';
 
 export class Email {
@@ -5,7 +6,7 @@ export class Email {
 
   constructor(email: string) {
     if (!this.isValid(email)) {
-      throw new Error(messages.INVALID_EMAIL);
+      throw new BadRequestException(messages.INVALID_EMAIL);
     }
     this.value = email.toLowerCase().trim();
   }

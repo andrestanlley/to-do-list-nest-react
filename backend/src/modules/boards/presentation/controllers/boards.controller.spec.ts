@@ -9,19 +9,20 @@ import { BoardsController } from './boards.controller';
 
 describe('BoardsController', () => {
   let controller: BoardsController;
+  let findByUserUseCase: FindByUserUseCase;
+  let createBoardUseCase: CreateBoardUseCase;
 
   const boards: IBoardOutput[] = [];
 
   beforeEach(async () => {
     class RepoMock {
       create = jest.fn((dto) => {
-        const board = { ...dto, id: randomUUID(), createdAt: new Date() };
-        boards.push(board);
-        return board;
+        boards.push(dto);
+        return dto;
       });
 
       findByUser = jest.fn((userId: string) =>
-        boards.filter((board) => board.user_id === userId),
+        boards.filter((board) => board.user.id === userId),
       );
     }
 
@@ -35,6 +36,8 @@ describe('BoardsController', () => {
     }).compile();
 
     controller = module.get<BoardsController>(BoardsController);
+    findByUserUseCase = module.get<FindByUserUseCase>(FindByUserUseCase);
+    createBoardUseCase = module.get<CreateBoardUseCase>(CreateBoardUseCase);
   });
 
   it('should be defined', () => {
@@ -44,34 +47,34 @@ describe('BoardsController', () => {
   it('should register a board successfully', async () => {
     const boardDTO = {
       name: 'Pessoal',
-      user_id: randomUUID(),
+      user: { id: randomUUID() },
     };
 
-    const result = await controller.create(boardDTO);
+    const result = await createBoardUseCase.execute(boardDTO.user.id, boardDTO);
     expect(result.id).toBeTruthy();
     expect(result.name).toEqual(boardDTO.name);
-    expect(result.user_id).toEqual(boardDTO.user_id);
+    expect(result.user).toEqual(boardDTO.user);
   });
 
   it('should fail on create a board because invalid name', async () => {
     const boardDTO = {
       name: '',
-      user_id: randomUUID(),
+      user: { id: randomUUID() },
     };
 
-    await expect(controller.create(boardDTO)).rejects.toThrow(
-      messages.INVALID_BOARD_NAME,
-    );
+    await expect(
+      createBoardUseCase.execute(boardDTO.user.id, boardDTO),
+    ).rejects.toThrow(messages.INVALID_BOARD_NAME);
   });
 
   it('should get all boards of the user successfully', async () => {
     const boardDTO = {
       name: 'Pessoal',
-      user_id: randomUUID(),
+      user: { id: randomUUID() },
     };
 
-    await controller.create(boardDTO);
-    const result = await controller.findAll(boardDTO.user_id);
+    await createBoardUseCase.execute(boardDTO.user.id, boardDTO);
+    const result = await findByUserUseCase.execute(boardDTO.user.id);
     expect(result).toHaveLength(1);
     expect(result[0].name).toEqual(boardDTO.name);
   });

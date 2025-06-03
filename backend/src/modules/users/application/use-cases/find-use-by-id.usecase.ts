@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { AUserRepository } from '../../domain/contracts/user-repository.abstract';
 
 @Injectable()
-export class FindUserByEmailUseCase {
+export class FindUserByIdUseCase {
   constructor(private readonly repo: AUserRepository) {}
 
-  async execute(email: string) {
-    return await this.repo.findByEmail(email);
+  async execute(id: string) {
+    return await this.repo.findById(id);
   }
 }

@@ -24,12 +24,9 @@ export class BoardsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(JwtAuthGuard)
-  create(@Body() createBoardDto: IBoardInput) {
-    try {
-      return this.createBoardUseCase.execute(createBoardDto);
-    } catch (error) {
-      throw new BadRequestException(error.message);
-    }
+  create(@Request() req, @Body() board: IBoardInput) {
+    const userId = req.user.sub;
+    return this.createBoardUseCase.execute(userId, board);
   }
 
   @Get()

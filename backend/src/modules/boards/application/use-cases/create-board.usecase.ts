@@ -7,8 +7,11 @@ import { IBoardInput } from '../contracts/board.contract';
 export default class CreateBoardUseCase {
   constructor(private readonly repo: ABoardRepository) {}
 
-  async execute(board: IBoardInput) {
-    const newBoard = Board.create(board).toObject();
+  async execute(userId: string, board: IBoardInput) {
+    const newBoard = new Board(board);
+    newBoard.user = {
+      id: userId,
+    };
     return await this.repo.create(newBoard);
   }
 }

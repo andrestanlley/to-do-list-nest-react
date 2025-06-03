@@ -16,10 +16,6 @@ export class UsersController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() user: IUserInput) {
-    try {
-      return await this.createUserUseCase.execute(user);
-    } catch (error) {
-      throw new BadRequestException(error.message);
-    }
+    return await this.createUserUseCase.execute(user);
   }
 }

@@ -18,18 +18,9 @@ export default class UserRepositoryImpl implements AUserRepository {
     private readonly repo: Repository<UserSchema>,
   ) {}
 
-  private toEntity(user: UserSchema): User {
-    return User.clone(user.id, user);
-  }
-
-  private mapperUser(dbUser: UserSchema) {
-    const user = this.toEntity(dbUser);
-    return userDomainToApplication(user);
-  }
-
   async create(user: IUserInput): Promise<IUserOutput> {
     const newUser = await this.repo.save(user);
-    return this.mapperUser(newUser);
+    return userDomainToApplication(newUser);
   }
 
   async findByEmail(email: string): Promise<IUserAuth | null> {

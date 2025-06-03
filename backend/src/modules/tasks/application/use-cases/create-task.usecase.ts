@@ -8,7 +8,7 @@ export class CreateTaskUseCase {
   constructor(private readonly repo: ATaskRepository) {}
 
   async execute(task: ITaskInput) {
-    const newTask = Task.create(task).toObject();
+    const newTask = new Task(task);
     return await this.repo.create(newTask);
   }
 }

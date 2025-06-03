@@ -5,6 +5,8 @@ import { CreateBoards1748781735682 } from './migrations/1748781735682-CreateBoar
 import { BoardSchema } from '../../../modules/boards/infrastructure/database/schemas/board.schema';
 import { CreateTasks1748798157342 } from './migrations/1748798157342-CreateTasks';
 import { TaskSchema } from '../../../modules/tasks/infrastructure/database/schemas/task.schema';
+import { AddFieldsTask1748901850675 } from './migrations/1748901850675-AddFieldsTask';
+import 'dotenv/config';
 
 export const typeOrmConfig: DataSourceOptions = {
   type: 'mssql',
@@ -27,5 +29,6 @@ export default new DataSource({
     CreateUsers1748780686973,
     CreateBoards1748781735682,
     CreateTasks1748798157342,
+    AddFieldsTask1748901850675,
   ],
 });

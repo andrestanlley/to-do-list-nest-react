@@ -3,7 +3,6 @@ import { CreateUserUseCase } from '../../application/use-cases/create-user.useca
 import { AUserRepository } from '../../domain/contracts/user-repository.abstract';
 import { messages } from 'src/shared/domain/constants/messages';
 import { FindUserByEmailUseCase } from '../../application/use-cases/find-user-by-email.usecase';
-import { randomUUID } from 'crypto';
 import { UsersController } from './users.controller';
 import { IUserOutput } from '../../application/contracts/user.contract';
 
@@ -15,9 +14,8 @@ describe('UsersController', () => {
   beforeEach(async () => {
     class RepoMock {
       create = jest.fn((dto) => {
-        const user = { ...dto, id: randomUUID(), createdAt: new Date() };
-        users.push(user);
-        return user;
+        users.push(dto);
+        return dto;
       });
       findByEmail = jest.fn();
     }
