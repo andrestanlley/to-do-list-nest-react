@@ -1,6 +1,6 @@
 import { api } from "./apiService";
 
-function getTokenFromCookie() {
+export function getTokenFromCookie() {
 	const cookies = document.cookie.split(";");
 	for (let cookie of cookies) {
 		const [key, value] = cookie.trim().split("=");

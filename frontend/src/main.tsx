@@ -4,7 +4,7 @@ import "./main.css";
 import { Toaster } from "@/components/ui/sonner";
 import updateTokenFromCookies from "./services/getTokenCookie";
 import AppRouter from "./routes";
-import { AppProvider } from "./context/AppContext";
+import { AppProvider } from "./contexts/AppContext";
 
 updateTokenFromCookies();
 createRoot(document.getElementById("root")!).render(

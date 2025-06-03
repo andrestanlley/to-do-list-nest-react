@@ -17,13 +17,13 @@ import type { ITask } from "@/interfaces/ITask";
 import TaskItem from "@/components/Task/TaskItem";
 import TaskForm from "@/components/Task/TaskForm";
 import { api } from "@/services/apiService";
-import { useAppContext } from "@/context/AppContext";
+import { useAppContext } from "@/contexts/AppContext";
 
-interface TasksModalProps {
+interface IBoardProps {
 	board: IBoard;
 }
 
-export function TasksModal({ board }: TasksModalProps) {
+export function BoardListModal({ board }: IBoardProps) {
 	const { tasks, setTasks } = useAppContext();
 	const [open, setOpen] = useState(false);
 	const [newTaskForm, setNewTaskForm] = useState<boolean>(true);
@@ -71,10 +71,10 @@ export function TasksModal({ board }: TasksModalProps) {
 			<DialogTrigger asChild>
 				<Card
 					key={board.id}
-					className='h-full w-full p-4 flex flex-col justify-between shadow-md'
+					className='w-full p-4 flex flex-col justify-between shadow-md h-full cursor-pointer'
 				>
 					<div>
-						<CardTitle className='text-xl'>{board.name}</CardTitle>
+						<CardTitle className='text-2xl'>{board.name}</CardTitle>
 					</div>
 					<Button variant='outline' size='sm'>
 						{messages.tasks.show_tasks}

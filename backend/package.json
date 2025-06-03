@@ -18,7 +18,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "migration:run": "typeorm-ts-node-commonjs migration:run -d ./src/shared/infrastructure/database/data-source.ts",
+    "migration:run:dev": "typeorm-ts-node-commonjs migration:run -d ./src/shared/infrastructure/database/data-source.ts",
+    "migration:run": "typeorm migration:run -d ./dist/shared/infrastructure/database/data-source.js",
     "migration:create": "typeorm migration:create"
   },
   "dependencies": {
@@ -30,6 +31,7 @@
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/typeorm": "^11.0.0",
     "bcryptjs": "^3.0.2",
+    "luxon": "^3.6.1",
     "morgan": "^1.10.0",
     "mssql": "^11.0.1",
     "passport": "^0.7.0",
@@ -48,6 +50,7 @@
     "@swc/core": "^1.10.7",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
+    "@types/luxon": "^3.6.2",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.10.7",
     "@types/passport-jwt": "^4.0.1",

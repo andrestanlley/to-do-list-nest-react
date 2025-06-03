@@ -1,3 +1,4 @@
+import { dateToTZ } from 'src/shared/utils/date-to-tz.utils';
 import { ITaskOutput } from '../contracts/task.contract';
 
 export function taskDomainToApplication(task: ITaskOutput): ITaskOutput {
@@ -8,7 +9,7 @@ export function taskDomainToApplication(task: ITaskOutput): ITaskOutput {
     createdAt: task.createdAt,
     updatedAt: task.updatedAt,
     finished: task.finished,
-    limitDate: task.limitDate,
+    limitDate: dateToTZ(task.limitDate),
     board: task.board,
   };
 }

@@ -9,7 +9,7 @@ export default function InputText({
 	field,
 	placeholder,
 	type = "text",
-	onChangeCallback = console.log,
+	onChangeCallback = () => {},
 }: IInputText) {
 	return (
 		<>

@@ -12,16 +12,14 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import messages from "@/constants/messages";
+import { useAppContext } from "@/contexts/AppContext";
 import { api } from "@/services/apiService";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-interface IBoardsModalProps {
-	updateBoardsCallback: Function;
-}
-
-export function BoardsModal({ updateBoardsCallback }: IBoardsModalProps) {
+export function BoardsModal() {
+	const { setBoards } = useAppContext();
 	const [newBoardName, setNewBoardName] = useState<string>("Pessoal");
 	const [open, setOpen] = useState<boolean>(false);
 
@@ -30,7 +28,7 @@ export function BoardsModal({ updateBoardsCallback }: IBoardsModalProps) {
 		try {
 			const result = await api.post("/boards", { name: newBoardName });
 			toast(messages.boards.create_sucess);
-			updateBoardsCallback(result.data);
+			setBoards((prev) => [...prev, result.data]);
 			setOpen(false);
 		} catch (error: any) {
 			toast.error(error.response.data.message);
@@ -41,7 +39,7 @@ export function BoardsModal({ updateBoardsCallback }: IBoardsModalProps) {
 			<DialogTrigger asChild>
 				<Card
 					onClick={() => setOpen(true)}
-					className='w-full p-4 flex items-center justify-center border-dashed border-2 text-muted-foreground h-full'
+					className='w-full p-4 flex items-center justify-center border-dashed border-2 text-muted-foreground h-full  cursor-pointer'
 				>
 					<Plus size={24} />
 					<span>Adicionar novo quadro</span>

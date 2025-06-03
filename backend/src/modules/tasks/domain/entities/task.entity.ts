@@ -1,6 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { messages } from 'src/shared/domain/constants/messages';
+import { dateToTZ } from 'src/shared/utils/date-to-tz.utils';
 
 interface ITask {
   id?: string;
@@ -33,7 +34,7 @@ export class Task {
     this._description = props.description;
     this._board = props.board;
     this._finished = props.finished ?? false;
-    this._limitDate = props.limitDate;
+    this._limitDate = dateToTZ(props.limitDate);
     this._createdAt = props.createdAt ?? now;
     this._updatedAt = props.updatedAt ?? now;
   }
@@ -75,7 +76,7 @@ export class Task {
   }
 
   set limitDate(date: Date | undefined) {
-    this._limitDate = date;
+    this._limitDate = dateToTZ(date);
   }
 
   get createdAt() {

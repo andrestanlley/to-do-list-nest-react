@@ -83,12 +83,15 @@ export default function TaskForm({
 											.split("T")[0]
 									: ""
 							}
-							onChange={(e) =>
+							onChange={(e) => {
+								if (!e.target.value) return "";
+								const date = new Date(e.target.value);
+								date.setHours(date.getHours() + 3);
 								setTask({
 									...task,
-									limitDate: new Date(e.target.value),
-								})
-							}
+									limitDate: date,
+								});
+							}}
 							className='mb-2'
 						/>
 					</>

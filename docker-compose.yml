@@ -7,6 +7,18 @@ services:
         networks:
             - to-do-network
         restart: unless-stopped
+        depends_on:
+            database:
+                condition: service_healthy
+        environment: # Commitado propositalmente para facilitar o build, utilize váriaveis de ambiente em PRD.
+            - DB_HOST=database
+            - DB_USER=sa
+            - DB_PASS=@#aadsSDWR(878)5&
+            - DB_NAME=to_do
+            - SALT_PWD=12
+            - JWT_SECRET=U2UgZGVjb2RpZmljb3Ugw6kgcG9yIHF1ZSBxdWVyIG1lIGNvbnRyYXRhciA6RA====
+            - FRONT_URL="http://spa:8080"
+        command: sh -c "npm run migration:run && node dist/main.js"
 
     frontend:
         container_name: SPA
@@ -15,6 +27,8 @@ services:
             - 8080:80
         networks:
             - to-do-network
+        environment:
+            - BACKEND_URL="http://api:3000"
 
     database:
         container_name: db
@@ -23,6 +37,23 @@ services:
             - to-do-network
         ports:
             - 1433:1433
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "/opt/mssql-tools/bin/sqlcmd",
+                    "-S",
+                    "localhost",
+                    "-U",
+                    "sa",
+                    "-P",
+                    "@#aadsSDWR(878)5&",
+                    "-Q",
+                    "SELECT 1",
+                ]
+            interval: 10s
+            timeout: 5s
+            retries: 24
 
 networks:
     to-do-network:

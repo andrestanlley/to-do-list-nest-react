@@ -58,7 +58,6 @@ export class TasksController {
     @Param('id') id: string,
     @Body() task: ITaskOutput,
   ) {
-    console.log('33333', id);
     const userId = req.user.sub;
     return await this.updateTaskUseCase.execute(userId, id, task);
   }

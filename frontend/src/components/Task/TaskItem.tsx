@@ -6,7 +6,10 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Label } from "../ui/label";
 import { api } from "@/services/apiService";
-import { useAppContext } from "@/context/AppContext";
+import { useAppContext } from "@/contexts/AppContext";
+import { GrValidate } from "react-icons/gr";
+import { CiCircleMinus } from "react-icons/ci";
+import { FaRegEdit, FaTrash } from "react-icons/fa";
 
 interface ITaskProps {
 	task: ITask;
@@ -56,7 +59,6 @@ export default function TaskItem({ task, boardId }: ITaskProps) {
 			toast.success("Tarefa removida");
 			removeTask(task);
 		} catch (error: any) {
-			console.log(error);
 			toast.error(error.response.data.message);
 		}
 	}
@@ -75,10 +77,25 @@ export default function TaskItem({ task, boardId }: ITaskProps) {
 		}
 	}
 
+	function getBgColor() {
+		if (!task.limitDate) return;
+
+		const now = new Date();
+		const limitDate = new Date(task.limitDate);
+		const threeDaysFromNow = new Date(now);
+		threeDaysFromNow.setDate(now.getDate() + 3);
+
+		if (task.finished) return "bg-green-50";
+		if (limitDate >= threeDaysFromNow) return;
+		if (limitDate < now) return "bg-red-100";
+
+		return;
+	}
+
 	return (
 		<div
 			key={task.id}
-			className='border rounded-lg p-3 flex flex-col gap-2'
+			className={`border rounded-lg p-3 flex flex-col gap-2 ${getBgColor()}`}
 		>
 			<div className='flex justify-between items-start gap-4'>
 				<div className='flex-1'>
@@ -113,12 +130,15 @@ export default function TaskItem({ task, boardId }: ITaskProps) {
 												.split("T")[0]
 										: ""
 								}
-								onChange={(e) =>
+								onChange={(e) => {
+									if (!e.target.value) return "";
+									const date = new Date(e.target.value);
+									date.setHours(date.getHours() + 3);
 									setUpdateTask({
-										...updateTask,
-										limitDate: new Date(e.target.value),
-									})
-								}
+										...task,
+										limitDate: date,
+									});
+								}}
 								className='mb-2'
 							/>
 						</>
@@ -130,9 +150,9 @@ export default function TaskItem({ task, boardId }: ITaskProps) {
 							</p>
 							<p className='text-xs text-gray-500'>
 								{task.limitDate
-									? new Date(
-											task.limitDate
-									  ).toLocaleDateString()
+									? new Date(task.limitDate)
+											.toISOString()
+											.split("T")[0]
 									: "Sem estimativa"}
 							</p>
 						</>
@@ -168,7 +188,11 @@ export default function TaskItem({ task, boardId }: ITaskProps) {
 								size='sm'
 								onClick={() => onToggle()}
 							>
-								{task.finished ? "Desconcluir" : "Concluir"}
+								{task.finished ? (
+									<CiCircleMinus />
+								) : (
+									<GrValidate />
+								)}
 							</Button>
 							<Button
 								className='cursor-pointer'
@@ -176,7 +200,7 @@ export default function TaskItem({ task, boardId }: ITaskProps) {
 								size='sm'
 								onClick={onEdit}
 							>
-								Editar
+								<FaRegEdit />
 							</Button>
 							<Button
 								className='cursor-pointer'
@@ -184,7 +208,7 @@ export default function TaskItem({ task, boardId }: ITaskProps) {
 								size='sm'
 								onClick={() => onDelete(task.id!)}
 							>
-								Apagar
+								<FaTrash />
 							</Button>
 						</>
 					)}

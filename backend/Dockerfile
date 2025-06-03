@@ -13,7 +13,7 @@ RUN npm install --only=dev
 
 RUN npm run build
 
-FROM node:18-alpine AS production
+FROM node:22-alpine AS production
 
 WORKDIR /app
 
@@ -24,7 +24,5 @@ RUN npm install --only=production
 COPY --from=builder /app/dist ./dist
 
 COPY --from=builder /app/node_modules ./node_modules
-
-RUN npm run migration:run
 
 CMD ["node", "dist/main.js"]

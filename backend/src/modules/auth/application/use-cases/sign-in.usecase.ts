@@ -8,7 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AUserRepository } from 'src/modules/users/domain/contracts/user-repository.abstract';
 import * as bcrypt from 'bcryptjs';
 import { AuthenticatedUser } from '../../domain/entities/auth.entity';
-import { authenticatedUserDomainToApplication } from '../mapper/sign-in.mapper';
+import { authenticatedUserDomainToApplication } from '../mappers/sign-in.mapper';
 
 @Injectable()
 export class SignInUseCase {
