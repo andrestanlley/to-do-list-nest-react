@@ -11,7 +11,7 @@ import {
   Query,
   Put,
 } from '@nestjs/common';
-import { ITaskInput } from '../../application/contracts/task.contract';
+import { ITaskInput, ITaskOutput } from '../../application/contracts/task.contract';
 import { CreateTaskUseCase } from '../../application/use-cases/create-task.usecase';
 import { FindAllTasksUseCase } from '../../application/use-cases/find-all-task.usecase';
 import { UpdateTaskUseCase } from '../../application/use-cases/update-task.usecase';
@@ -45,7 +45,7 @@ export class TasksController {
 
   @Put(':id')
   @UseGuards(JwtAuthGuard)
-  async update(@Param('id') id: string, @Body() task: ITaskInput) {
+  async update(@Param('id') id: string, @Body() task: ITaskOutput) {
     return await this.updateTaskUseCase.execute(id, task);
   }
 

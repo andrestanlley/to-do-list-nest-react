@@ -67,7 +67,7 @@ describe('TasksController', () => {
     expect(result.id).toBeTruthy();
     expect(result.title).toEqual(taskDto.title);
     expect(result.description).toEqual(taskDto.description);
-    expect(result.board.id).toEqual({ boardId: taskDto.board.id });
+    expect(result.board.id).toEqual(taskDto.board.id);
   });
 
   it('Should fail on create a new task because invalid title', async () => {
@@ -103,8 +103,12 @@ describe('TasksController', () => {
 
     const result = await controller.create(taskDto);
     const update = await controller.update(result.id, {
-      ...taskDto,
+      id: result.id,
       title: 'Colher morangos a tarde',
+      board: result.board,
+      createdAt: result.createdAt,
+      description: result.description,
+      updatedAt: result.updatedAt,
     });
 
     expect(update?.id).toEqual(result.id);
