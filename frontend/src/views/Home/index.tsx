@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import type { IBoard } from "@/interfaces/IBoards";
 import { toast } from "sonner";
 import { BoardsModal } from "@/components/Modal/Boards";
 import { TasksModal } from "@/components/Modal/Tasks";
 import { api } from "@/services/apiService";
+import Container from "@/components/Container";
+import { useAppContext } from "@/context/AppContext";
 
 export default function Home() {
-	const [boards, setBoards] = useState<IBoard[]>([]);
+	const { boards, setBoards } = useAppContext();
 
 	async function fetchBoards() {
 		try {
@@ -26,14 +28,14 @@ export default function Home() {
 	}, []);
 
 	return (
-		<>
-			<div className='grid grid-cols-4 gap-4 p-4 bg-purple-200 h-screen'>
+		<Container>
+			<div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 bg-purple-200 h-screen'>
 				{boards.map((board) => (
 					<TasksModal key={board.id} board={board} />
 				))}
 
 				<BoardsModal updateBoardsCallback={updateBoards} />
 			</div>
-		</>
+		</Container>
 	);
 }

@@ -41,7 +41,7 @@ export function BoardsModal({ updateBoardsCallback }: IBoardsModalProps) {
 			<DialogTrigger asChild>
 				<Card
 					onClick={() => setOpen(true)}
-					className='h-48 w-full p-4 flex items-center justify-center border-dashed border-2 text-muted-foreground'
+					className='w-full p-4 flex items-center justify-center border-dashed border-2 text-muted-foreground h-full'
 				>
 					<Plus size={24} />
 					<span>Adicionar novo quadro</span>

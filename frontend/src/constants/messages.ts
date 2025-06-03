@@ -1,6 +1,16 @@
 export default {
-	main: { nome: "Nome", create: "Criar", cancel: "Cancelar" },
-	tasks: {modal_title: "Tarefas"},
+	main: {
+		nome: "Nome",
+		create: "Criar",
+		cancel: "Cancelar",
+		logout: "Sair",
+		appName: "myTasks",
+	},
+	tasks: {
+		modal_title: "Tarefas",
+		create: "Criar tarefa",
+		show_tasks: "Ver tarefas",
+	},
 	signin: {
 		entrar: "Entrar",
 		welcome_text: `Organize suas tarefas de forma simples e eficiente.

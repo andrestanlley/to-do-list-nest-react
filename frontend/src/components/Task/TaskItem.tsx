@@ -6,25 +6,17 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Label } from "../ui/label";
 import { api } from "@/services/apiService";
+import { useAppContext } from "@/context/AppContext";
 
 interface ITaskProps {
 	task: ITask;
-	deleteCallback: Function;
-	updateCallback: Function;
-	// completeCallback: Function;
+	boardId: string;
 }
 
-export default function TaskItem({
-	task,
-	deleteCallback,
-	updateCallback,
-}: ITaskProps) {
+export default function TaskItem({ task, boardId }: ITaskProps) {
+	const { setTasks } = useAppContext();
 	const [isEditing, setIsEditing] = useState(false);
 	const [updateTask, setUpdateTask] = useState<ITask>(task);
-
-	function onToggleComplete(taskId: string) {
-		console.log("concluir", taskId);
-	}
 
 	function onCancel() {
 		setIsEditing(false);
@@ -35,10 +27,23 @@ export default function TaskItem({
 		setIsEditing(true);
 	}
 
+	function updateTasks(editedTask: ITask) {
+		setTasks((prev) =>
+			prev.map((task) => (task.id === editedTask.id ? editedTask : task))
+		);
+	}
+
+	function removeTask(deletedTask: ITask) {
+		setTasks((prev) => prev.filter((task) => task.id !== deletedTask.id));
+	}
+
 	async function sendUpdateTask() {
 		try {
-			const result = await api.put("/tasks/" + updateTask.id, updateTask);
-			updateCallback(result.data);
+			const result = await api.put("/tasks/" + updateTask.id, {
+				...updateTask,
+				board: { id: boardId },
+			});
+			updateTasks(result.data);
 			setIsEditing(false);
 		} catch (error: any) {
 			toast.error(error.response.data.message);
@@ -47,9 +52,24 @@ export default function TaskItem({
 
 	async function onDelete(taskId: string) {
 		try {
-			await api.delete("/tasks/" + taskId);
+			await api.delete(`/tasks/${boardId}/${taskId}`);
 			toast.success("Tarefa removida");
-			deleteCallback(task);
+			removeTask(task);
+		} catch (error: any) {
+			console.log(error);
+			toast.error(error.response.data.message);
+		}
+	}
+
+	async function onToggle() {
+		try {
+			await api.put("tasks/toggle/" + task.id, {
+				...task,
+				board: {
+					id: boardId,
+				},
+			});
+			updateTasks({ ...task, finished: !task.finished });
 		} catch (error: any) {
 			toast.error(error.response.data.message);
 		}
@@ -146,7 +166,7 @@ export default function TaskItem({
 								}
 								className='cursor-pointer'
 								size='sm'
-								onClick={() => onToggleComplete(task.id!)}
+								onClick={() => onToggle()}
 							>
 								{task.finished ? "Desconcluir" : "Concluir"}
 							</Button>

@@ -10,33 +10,45 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Card, CardTitle } from "@/components/ui/card";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import messages from "@/constants/messages";
 import type { IBoard } from "@/interfaces/IBoards";
 import type { ITask } from "@/interfaces/ITask";
 import TaskItem from "@/components/Task/TaskItem";
 import TaskForm from "@/components/Task/TaskForm";
 import { api } from "@/services/apiService";
+import { useAppContext } from "@/context/AppContext";
 
 interface TasksModalProps {
 	board: IBoard;
 }
 
 export function TasksModal({ board }: TasksModalProps) {
+	const { tasks, setTasks } = useAppContext();
 	const [open, setOpen] = useState(false);
-	const [tasks, setTasks] = useState<ITask[]>([]);
 	const [newTaskForm, setNewTaskForm] = useState<boolean>(true);
+	const boardTasks = tasks.filter(
+		(task) => task.board && task.board.id === board.id
+	);
 
-	async function getTasks() {
+	const getTasks = useCallback(async () => {
 		try {
 			const result = await api.get("/tasks", {
-				params: {
-					boardId: board.id,
-				},
+				params: { boardId: board.id },
 			});
-			setTasks(result.data);
+
+			setTasks((prev) => {
+				const newTasks = result.data.filter(
+					(task: ITask) => !prev.some((t) => t.id === task.id)
+				);
+				return [...prev, ...newTasks];
+			});
 		} catch (error) {}
-	}
+	}, [board.id]);
+
+	useEffect(() => {
+		getTasks();
+	}, [getTasks]);
 
 	function toggleHiddenNewTaskForm() {
 		setNewTaskForm(!newTaskForm);
@@ -46,21 +58,7 @@ export function TasksModal({ board }: TasksModalProps) {
 		setTasks([...tasks, task]);
 	}
 
-	function updateTasks(editedTask: ITask) {
-		const actualTasks = tasks.filter((task) => task.id !== editedTask.id);
-		setTasks([...actualTasks, editedTask]);
-	}
-
-	function removeTask(deletedTask: ITask) {
-		const actualTasks = tasks.filter((task) => task.id !== deletedTask.id);
-		setTasks(actualTasks);
-	}
-
-	useEffect(() => {
-		getTasks();
-	}, [board.id]);
-
-	const sortedTasks = tasks.sort((a, b) => {
+	const sortedTasks = [...boardTasks].sort((a, b) => {
 		if (!a.limitDate) return 1;
 		if (!b.limitDate) return -1;
 		return (
@@ -73,13 +71,13 @@ export function TasksModal({ board }: TasksModalProps) {
 			<DialogTrigger asChild>
 				<Card
 					key={board.id}
-					className='h-48 w-full p-4 flex flex-col justify-between shadow-md'
+					className='h-full w-full p-4 flex flex-col justify-between shadow-md'
 				>
 					<div>
 						<CardTitle className='text-xl'>{board.name}</CardTitle>
 					</div>
 					<Button variant='outline' size='sm'>
-						Ver tarefas
+						{messages.tasks.show_tasks}
 					</Button>
 				</Card>
 			</DialogTrigger>
@@ -87,16 +85,16 @@ export function TasksModal({ board }: TasksModalProps) {
 				<DialogHeader>
 					<section className='flex justify-between'>
 						<div>
-							<DialogTitle>
+							<DialogTitle>{board.name}</DialogTitle>
+							<DialogDescription>
 								{messages.tasks.modal_title}
-							</DialogTitle>
-							<DialogDescription>{board.name}</DialogDescription>
+							</DialogDescription>
 						</div>
 						<Button
 							onClick={() => toggleHiddenNewTaskForm()}
 							className='cursor-pointer'
 						>
-							Criar tarefa
+							{messages.tasks.create}
 						</Button>
 					</section>
 				</DialogHeader>
@@ -118,8 +116,7 @@ export function TasksModal({ board }: TasksModalProps) {
 							<TaskItem
 								key={task.id}
 								task={task}
-								deleteCallback={removeTask}
-								updateCallback={updateTasks}
+								boardId={board.id}
 							/>
 						))
 					)}
