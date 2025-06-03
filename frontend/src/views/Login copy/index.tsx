@@ -4,8 +4,7 @@ import InputText from "../../components/InputText";
 import { useState } from "react";
 import doLogin from "../../services/user/doLogin";
 import { useNavigate } from "react-router-dom";
-import messages from "../../constants/messages";
-import { toast } from "sonner";
+import text from "../../constants/messages";
 
 function Login() {
 	const [login, setLogin] = useState({ email: "", password: "" });
@@ -13,12 +12,9 @@ function Login() {
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		try {
-			const result = await doLogin(login);
-			if (result.status === 200) navigator("/home");
-		} catch (error: any) {
-			toast.error(error.response.data.message);
-		}
+		const result = await doLogin(login);
+		if (!result) return;
+		navigator("/home");
 	}
 
 	return (
@@ -50,9 +46,7 @@ function Login() {
 					/>
 					<Button text='Entrar' />
 				</form>
-				<SButton variant='link' onClick={() => navigator("/register")}>
-					Registrar
-				</SButton>
+				<SButton variant='link'>Registrar</SButton>
 			</div>
 		</div>
 	);

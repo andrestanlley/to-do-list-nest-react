@@ -1,21 +1,28 @@
 import Button from "../../components/Button";
-import { Button as SButton } from "@/components/ui/button";
 import InputText from "../../components/InputText";
 import { useState } from "react";
-import doLogin from "../../services/user/doLogin";
 import { useNavigate } from "react-router-dom";
-import messages from "../../constants/messages";
 import { toast } from "sonner";
+import { api } from "@/services/apiService";
+import messages from "@/constants/messages";
 
-function Login() {
-	const [login, setLogin] = useState({ email: "", password: "" });
+function Register() {
 	const navigator = useNavigate();
+	const [account, setAccount] = useState({
+		name: "",
+		email: "",
+		password: "",
+	});
 
-	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+	async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		try {
-			const result = await doLogin(login);
-			if (result.status === 200) navigator("/home");
+			const result = await api.post("/users", {
+				name: account.name,
+				email: account.email,
+				password: account.password,
+			});
+			if (result.status === 201) return navigator("/");
 		} catch (error: any) {
 			toast.error(error.response.data.message);
 		}
@@ -32,30 +39,33 @@ function Login() {
 
 			<div className='w-1/2 bg-gray-100 flex flex-col justify-center items-center p-12 rounded-l-3xl shadow-lg'>
 				<h1 className='text-3xl font-semibold mb-8 text-gray-800'>
-					{messages.signin.entrar}
+					{messages.register.registrar}
 				</h1>
-				<form onSubmit={handleLogin}>
+				<form onSubmit={handleRegister}>
+					<InputText
+						field='Nome'
+						onChangeCallback={(e) =>
+							setAccount({ ...account, name: e })
+						}
+					/>
 					<InputText
 						field='Email'
 						onChangeCallback={(e) =>
-							setLogin({ ...login, email: e })
+							setAccount({ ...account, email: e })
 						}
 					/>
 					<InputText
 						field='Senha'
 						type='password'
 						onChangeCallback={(e) =>
-							setLogin({ ...login, password: e })
+							setAccount({ ...account, password: e })
 						}
 					/>
-					<Button text='Entrar' />
+					<Button text='Registrar' />
 				</form>
-				<SButton variant='link' onClick={() => navigator("/register")}>
-					Registrar
-				</SButton>
 			</div>
 		</div>
 	);
 }
 
-export default Login;
+export default Register;

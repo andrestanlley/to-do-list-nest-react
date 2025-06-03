@@ -1,19 +1,24 @@
 import { useEffect, useState } from "react";
-import type { IBoard } from "../../interfaces/IBoards";
-import getBoardsByUser from "../../services/getBoardsByUser";
-import { api } from "../../services/apiService";
+import type { IBoard } from "@/interfaces/IBoards";
+import { toast } from "sonner";
+import { BoardsModal } from "@/components/Modal/Boards";
+import { TasksModal } from "@/components/Modal/Tasks";
+import { api } from "@/services/apiService";
 
 export default function Home() {
 	const [boards, setBoards] = useState<IBoard[]>([]);
 
 	async function fetchBoards() {
 		try {
-            console.log(api.defaults.headers.common['Authorization']);
-			const res = await getBoardsByUser();
+			const res = await api.get("/boards");
 			setBoards(res.data);
-		} catch (error) {
-			console.error("Erro ao buscar boards:", error);
+		} catch (error: any) {
+			toast.error(error.response.data.message);
 		}
+	}
+
+	function updateBoards(board: IBoard) {
+		setBoards([...boards, board]);
 	}
 
 	useEffect(() => {
@@ -22,10 +27,13 @@ export default function Home() {
 
 	return (
 		<>
-			<div>Pessoal</div>
-			{boards.map((board) => (
-				<div key={board.id}>{board.name}</div>
-			))}
+			<div className='grid grid-cols-4 gap-4 p-4 bg-purple-200 h-screen'>
+				{boards.map((board) => (
+					<TasksModal key={board.id} board={board} />
+				))}
+
+				<BoardsModal updateBoardsCallback={updateBoards} />
+			</div>
 		</>
 	);
 }

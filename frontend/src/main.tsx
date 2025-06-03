@@ -4,20 +4,19 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./main.css";
 import Login from "./views/Login";
 import Home from "./views/Home";
-import { getTokenFromCookie } from "./services/getTokenCookie";
-import { api } from "./services/apiService";
+import Register from "./views/Register";
+import { Toaster } from "@/components/ui/sonner";
+import updateTokenFromCookies from "./services/getTokenCookie";
 
-const token = getTokenFromCookie();
-if (token) {
-	api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-}
-
+updateTokenFromCookies();
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
+		<Toaster />
 		<Router>
 			<Routes>
 				<Route path='/' element={<Login />} />
 				<Route path='/home' element={<Home />} />
+				<Route path='/register' element={<Register />} />
 			</Routes>
 		</Router>
 	</StrictMode>
