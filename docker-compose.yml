@@ -24,11 +24,11 @@ services:
         container_name: SPA
         build: ./frontend
         ports:
-            - 8080:80
+            - 8081:80
         networks:
             - to-do-network
         environment:
-            - BACKEND_URL="http://api:3000"
+            - VITE_BACKEND_URL="http://api:3000"
 
     database:
         container_name: db
