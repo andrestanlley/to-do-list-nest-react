@@ -4,7 +4,6 @@ WORKDIR /app
 
 COPY package*.json ./
 
-ENV VITE_BACKEND_URL "http://api:3000"
 RUN npm install
 
 COPY . .
